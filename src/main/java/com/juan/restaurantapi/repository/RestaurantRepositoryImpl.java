@@ -1,6 +1,7 @@
 package com.juan.restaurantapi.repository;
 
 import com.juan.restaurantapi.dto.RestaurantDTO;
+import com.juan.restaurantapi.entity.RestaurantEntity;
 import com.juan.restaurantapi.mapper.RestaurantMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -21,5 +22,16 @@ public class RestaurantRepositoryImpl implements RestaurantRepository {
                 .stream()
                 .map(RestaurantMapper::mapEntityToDTO)
                 .toList());
+    }
+
+    @Override
+    public Optional<RestaurantEntity> getRestaurantById(Long restaurantId) {
+        Optional<RestaurantEntity> restaurantEntity = restaurantJPARepository.findById(restaurantId);
+
+        if (restaurantEntity.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return restaurantEntity;
     }
 }
