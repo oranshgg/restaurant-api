@@ -1,6 +1,7 @@
 package com.juan.restaurantapi.repository;
 
 import com.juan.restaurantapi.dto.OrderDTO;
+import com.juan.restaurantapi.entity.OrderEntity;
 import com.juan.restaurantapi.mapper.OrderMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -21,5 +22,12 @@ public class OrderRepositoryImpl implements OrderRepository {
                         .stream()
                         .map(OrderMapper::mapEntityToDTO)
                         .toList());
+    }
+
+    @Override
+    public Optional<OrderDTO> createOrder(OrderEntity orderEntity) {
+        return Optional.of(
+                OrderMapper.mapEntityToDTO(orderJPARepository.save(orderEntity))
+        );
     }
 }

@@ -1,6 +1,7 @@
 package com.juan.restaurantapi.service;
 
 import com.juan.restaurantapi.dto.RestaurantDTO;
+import com.juan.restaurantapi.entity.RestaurantEntity;
 import com.juan.restaurantapi.repository.RestaurantRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,5 +23,10 @@ public class RestaurantServiceImpl implements RestaurantService{
     @Override
     public Optional<List<RestaurantDTO>> getAllRestaurants() {
         return restaurantRepository.getAllRestaurants();
+    }
+
+    @Override
+    public Optional<RestaurantEntity> getRestaurantById(Long restaurantId) {
+        return restaurantRepository.getRestaurantById(restaurantId);
     }
 }
