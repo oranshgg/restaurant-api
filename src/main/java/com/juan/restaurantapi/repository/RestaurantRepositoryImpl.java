@@ -25,13 +25,13 @@ public class RestaurantRepositoryImpl implements RestaurantRepository {
     }
 
     @Override
-    public Optional<RestaurantEntity> getRestaurantById(Long restaurantId) {
+    public Optional<RestaurantDTO> getRestaurantById(Long restaurantId) {
         Optional<RestaurantEntity> restaurantEntity = restaurantJPARepository.findById(restaurantId);
 
         if (restaurantEntity.isEmpty()) {
             return Optional.empty();
         }
 
-        return restaurantEntity;
+        return Optional.of(RestaurantMapper.mapEntityToDTO(restaurantEntity.get()));
     }
 }

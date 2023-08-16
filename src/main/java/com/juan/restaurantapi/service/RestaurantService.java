@@ -24,5 +24,5 @@ public interface RestaurantService {
     /**
      * get restaurant by id
      */
-    Optional<RestaurantEntity> getRestaurantById(Long restaurantId);
+    Optional<RestaurantDTO> getRestaurantById(Long restaurantId);
 }

@@ -13,4 +13,11 @@ public final class RestaurantMapper {
                 .restaurantName(restaurant.getName())
                 .build();
     }
+
+    public static RestaurantEntity mapDTOToEntity(RestaurantDTO restaurantDTO) {
+        return RestaurantEntity.builder()
+                .id(restaurantDTO.getId())
+                .name(restaurantDTO.getRestaurantName())
+                .build();
+    }
 }

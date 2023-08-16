@@ -17,5 +17,5 @@ public interface RestaurantRepository {
     /**
      *
      */
-    Optional<RestaurantEntity> getRestaurantById(Long restaurantId);
+    Optional<RestaurantDTO> getRestaurantById(Long restaurantId);
 }
