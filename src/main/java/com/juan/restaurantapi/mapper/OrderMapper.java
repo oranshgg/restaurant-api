@@ -18,7 +18,7 @@ public final class OrderMapper {
                 .build();
     }
 
-    public static OrderEntity mapRequestToEntity(CreateOrderDTO createOrderDTO, RestaurantEntity restaurantEntity) {
+    public static OrderEntity mapRequestToEntity(RestaurantEntity restaurantEntity) {
         return OrderEntity.builder()
                 .restaurant(restaurantEntity)
                 .build();

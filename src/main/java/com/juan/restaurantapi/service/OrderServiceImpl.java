@@ -3,11 +3,13 @@ package com.juan.restaurantapi.service;
 import com.juan.restaurantapi.dto.CreateOrderDTO;
 import com.juan.restaurantapi.dto.OrderDTO;
 import com.juan.restaurantapi.dto.RestaurantDTO;
+import com.juan.restaurantapi.entity.MenuItemEntity;
 import com.juan.restaurantapi.entity.OrderEntity;
 import com.juan.restaurantapi.entity.RestaurantEntity;
 import com.juan.restaurantapi.exception.BadRequestException;
 import com.juan.restaurantapi.mapper.OrderMapper;
 import com.juan.restaurantapi.mapper.RestaurantMapper;
+import com.juan.restaurantapi.repository.MenuItemRepository;
 import com.juan.restaurantapi.repository.OrderRepository;
 import com.juan.restaurantapi.repository.RestaurantRepository;
 import lombok.AllArgsConstructor;
@@ -22,6 +24,7 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final RestaurantRepository restaurantRepository;
+    private final MenuItemRepository menuItemRepository;
 
     @Override
     public Optional<List<OrderDTO>> getAllOrders() {
@@ -41,7 +44,9 @@ public class OrderServiceImpl implements OrderService {
 
         RestaurantEntity restaurantEntity = this.mapRestaurantDTOToEntity(restaurantDTO.get());
 
-        OrderEntity orderEntity = this.mapCreateOrderDTOToEntity(createOrderDTO, restaurantEntity);
+        List<MenuItemEntity> menuList = menuItemRepository.getMenuItemsByRestaurantId(createOrderDTO.getRestaurant_id());
+
+        OrderEntity orderEntity = this.mapCreateOrderDTOToEntity(restaurantEntity);
         Optional<OrderDTO> createdOrder = orderRepository.createOrder(orderEntity);
 
         if(createdOrder.isEmpty()) {
@@ -55,7 +60,7 @@ public class OrderServiceImpl implements OrderService {
         return RestaurantMapper.mapDTOToEntity(restaurantDTO);
     }
 
-    private OrderEntity mapCreateOrderDTOToEntity(CreateOrderDTO createOrderDTO, RestaurantEntity restaurantEntity) {
-        return OrderMapper.mapRequestToEntity(createOrderDTO, restaurantEntity);
+    private OrderEntity mapCreateOrderDTOToEntity(RestaurantEntity restaurantEntity) {
+        return OrderMapper.mapRequestToEntity(restaurantEntity);
     }
 }
