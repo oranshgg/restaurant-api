@@ -1,18 +1,21 @@
 package com.juan.restaurantapi.service;
 
 import com.juan.restaurantapi.dto.CreateOrderDTO;
+import com.juan.restaurantapi.dto.MenuItemDTO;
 import com.juan.restaurantapi.dto.OrderDTO;
 import com.juan.restaurantapi.dto.RestaurantDTO;
 import com.juan.restaurantapi.entity.OrderEntity;
 import com.juan.restaurantapi.entity.RestaurantEntity;
 import com.juan.restaurantapi.exception.BadRequestException;
 import com.juan.restaurantapi.mapper.OrderMapper;
+import com.juan.restaurantapi.mapper.RestaurantMapper;
+import com.juan.restaurantapi.repository.MenuItemRepository;
 import com.juan.restaurantapi.repository.OrderRepository;
-import com.juan.restaurantapi.repository.RestaurantJPARepository;
 import com.juan.restaurantapi.repository.RestaurantRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +25,7 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final RestaurantRepository restaurantRepository;
+    private final MenuItemRepository menuItemRepository;
 
     @Override
     public Optional<List<OrderDTO>> getAllOrders() {
@@ -30,19 +34,26 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Optional<OrderDTO> createOrder(CreateOrderDTO createOrderDTO) {
-        Optional<RestaurantEntity> restaurantEntity =
-                restaurantRepository.getRestaurantById(createOrderDTO.getRestaurant_id());
-
-        if (restaurantEntity.isEmpty()) {
+        Optional<RestaurantDTO> restaurantDTO = restaurantRepository.getRestaurantById(createOrderDTO.getRestaurantId());
+        if (restaurantDTO.isEmpty()) {
             throw new BadRequestException(
-                String.format("No existe ningún restaurante con el id %d", createOrderDTO.getRestaurant_id())
+                String.format("No existe ningún restaurante con el id %d", createOrderDTO.getRestaurantId())
             );
         }
 
-        OrderEntity orderEntity = OrderMapper.mapRequestToEntity(createOrderDTO, restaurantEntity.get());
+        Optional<List<MenuItemDTO>> menuList = menuItemRepository.getMenuItemsByRestaurantId(createOrderDTO.getRestaurantId());
+        if (menuList.orElse(new ArrayList<>()).isEmpty()) {
+            throw new BadRequestException(
+                    String.format("No existen items para el restaurante con el id %d", createOrderDTO.getRestaurantId())
+            );
+        }
+
+        RestaurantEntity restaurantEntity = RestaurantMapper.mapDTOToEntity(restaurantDTO.get());
+        OrderEntity orderEntity = OrderMapper.mapRequestToEntity(restaurantEntity);
+
         Optional<OrderDTO> createdOrder = orderRepository.createOrder(orderEntity);
 
-        if(createdOrder.isEmpty()) {
+        if (createdOrder.isEmpty()) {
             return Optional.empty();
         }
 

@@ -50,7 +50,5 @@ public class OrderController {
             response.put("message", ex.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
-
     }
-
 }

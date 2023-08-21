@@ -26,7 +26,7 @@ public class RestaurantServiceImpl implements RestaurantService{
     }
 
     @Override
-    public Optional<RestaurantEntity> getRestaurantById(Long restaurantId) {
+    public Optional<RestaurantDTO> getRestaurantById(Long restaurantId) {
         return restaurantRepository.getRestaurantById(restaurantId);
     }
 }
