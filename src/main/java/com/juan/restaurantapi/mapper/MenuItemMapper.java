@@ -5,7 +5,7 @@ import com.juan.restaurantapi.entity.MenuItemEntity;
 
 public class MenuItemMapper {
 
-    private MenuItemMapper() {};
+    private MenuItemMapper() {}
 
     public static MenuItemDTO mapEntityToDTO(MenuItemEntity menuItemEntity) {
         return MenuItemDTO.builder()

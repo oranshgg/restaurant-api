@@ -18,11 +18,7 @@ public class MenuItemRepositoryImpl implements MenuItemRepository {
 
     @Override
     public Optional<List<MenuItemDTO>> getMenuItemsByRestaurantId(Long restaurantId) {
-          List<MenuItemEntity> restaurantItems = menuItemJPARepository
-                          .findAll()
-                          .stream()
-                          .filter(menuItemEntity -> menuItemEntity.getRestaurant().getId().equals(restaurantId))
-                          .toList();
+          List<MenuItemEntity> restaurantItems = menuItemJPARepository.findMenuItemEntitiesByRestaurantId(restaurantId);
 
         List<MenuItemDTO> restaurantItemsDTO = new ArrayList<>();
 
