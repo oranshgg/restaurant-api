@@ -3,6 +3,8 @@ package com.juan.restaurantapi.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -21,13 +23,16 @@ public class MenuItemEntity {
     private String name;
 
     @Column(name = "price")
-    private String price;
+    private BigDecimal price;
 
     @Column(name = "description")
     private String description;
 
     @Column(name = "extra_fields")
     private String extraFields;
+
+    @Column(name = "available")
+    private Boolean available;
 
     @ManyToOne
     @JoinColumn(name = "restaurant_id")

@@ -1,10 +1,11 @@
 package com.juan.restaurantapi.repository;
 
-import com.juan.restaurantapi.entity.MenuItemEntity;
+import com.juan.restaurantapi.dto.MenuItemDTO;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MenuItemRepository {
 
-    List<MenuItemEntity> getMenuItemsByRestaurantId(Long restaurantId);
+    Optional<List<MenuItemDTO>> getMenuItemsByRestaurantId(Long restaurantId);
 }

@@ -28,7 +28,10 @@ public class MenuItemDTO {
     private String description;
 
     @JsonProperty("extra_fields")
-    private String extra_fields;
+    private String extraFields;
+
+    @JsonProperty("available")
+    private Boolean available;
 
     @JsonProperty("restaurant")
     private RestaurantDTO restaurant = new RestaurantDTO();
