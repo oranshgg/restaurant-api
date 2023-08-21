@@ -21,14 +21,11 @@ public class MenuItemDTO {
     @JsonProperty("name")
     private String name;
 
-    @JsonProperty("name")
+    @JsonProperty("price")
     private BigDecimal price;
 
     @JsonProperty("description")
     private String description;
-
-    @JsonProperty("extra_fields")
-    private String extraFields;
 
     @JsonProperty("available")
     private Boolean available;
