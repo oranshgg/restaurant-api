@@ -28,9 +28,6 @@ public class MenuItemEntity {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "extra_fields")
-    private String extraFields;
-
     @Column(name = "available")
     private Boolean available;
 

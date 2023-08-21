@@ -13,7 +13,6 @@ public class MenuItemMapper {
                 .name(menuItemEntity.getName())
                 .price(menuItemEntity.getPrice())
                 .description(menuItemEntity.getDescription())
-                .extraFields(menuItemEntity.getExtraFields())
                 .available(menuItemEntity.getAvailable())
                 .restaurant(RestaurantMapper.mapEntityToDTO(menuItemEntity.getRestaurant()))
                 .build();
