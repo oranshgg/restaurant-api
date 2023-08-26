@@ -10,5 +10,5 @@ public interface OrderRepository {
 
     Optional<List<OrderDTO>> getAllOrders();
 
-    Optional<OrderDTO> createOrder(OrderEntity orderEntity);
+    Optional<OrderEntity> createOrder(OrderEntity orderEntity);
 }

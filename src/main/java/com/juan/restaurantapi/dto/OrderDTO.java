@@ -21,6 +21,9 @@ public class OrderDTO {
     @JsonProperty("date")
     private LocalDateTime date;
 
+    @JsonProperty("extra_fields")
+    private String extraFields;
+
     @JsonProperty("restaurant")
     private RestaurantDTO restaurant = new RestaurantDTO();
 }

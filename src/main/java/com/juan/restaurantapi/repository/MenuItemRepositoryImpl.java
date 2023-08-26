@@ -29,4 +29,8 @@ public class MenuItemRepositoryImpl implements MenuItemRepository {
         }
         return Optional.of(restaurantItemsDTO);
     }
+
+    public Optional<MenuItemEntity> getMenuItemById(Long menuItemId) {
+        return menuItemJPARepository.findById(menuItemId);
+    }
 }
