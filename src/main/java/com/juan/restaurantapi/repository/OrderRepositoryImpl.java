@@ -25,9 +25,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public Optional<OrderDTO> createOrder(OrderEntity orderEntity) {
-        return Optional.of(
-                OrderMapper.mapEntityToDTO(orderJPARepository.save(orderEntity))
-        );
+    public Optional<OrderEntity> createOrder(OrderEntity orderEntity) {
+        return Optional.of(orderJPARepository.save(orderEntity));
     }
 }
