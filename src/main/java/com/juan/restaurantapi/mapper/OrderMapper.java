@@ -15,12 +15,14 @@ public final class OrderMapper {
                 .id(order.getId())
                 .date(order.getDate())
                 .restaurant(RestaurantMapper.mapEntityToDTO(order.getRestaurant()))
+                .extraFields(order.getExtraFields())
                 .build();
     }
 
-    public static OrderEntity mapRequestToEntity(RestaurantEntity restaurantEntity) {
+    public static OrderEntity mapRequestToEntity(RestaurantEntity restaurantEntity, CreateOrderDTO createOrderDTO) {
         return OrderEntity.builder()
                 .restaurant(restaurantEntity)
+                .extraFields(createOrderDTO.getExtraFields())
                 .build();
     }
 }

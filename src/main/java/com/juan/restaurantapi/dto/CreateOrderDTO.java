@@ -17,4 +17,8 @@ public class CreateOrderDTO {
 
     @JsonProperty("menu_items_ids")
     private List<Long> menuItems;
+
+    @JsonProperty("extra_fields")
+    private String extraFields;
+
 }

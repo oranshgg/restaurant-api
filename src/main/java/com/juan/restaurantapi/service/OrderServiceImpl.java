@@ -53,12 +53,10 @@ public class OrderServiceImpl implements OrderService {
             );
         }
 
-        //TODO: validar que el array de menu items pertenezcan al restaurante
-
         List<MenuItemEntity> menuItemEntities = this.getMenuItemEntities(createOrderDTO.getMenuItems());
 
         RestaurantEntity restaurantEntity = RestaurantMapper.mapDTOToEntity(restaurantDTO.get());
-        OrderEntity orderEntity = OrderMapper.mapRequestToEntity(restaurantEntity);
+        OrderEntity orderEntity = OrderMapper.mapRequestToEntity(restaurantEntity, createOrderDTO);
 
         Optional<OrderEntity> createdOrder = orderRepository.createOrder(orderEntity);
 

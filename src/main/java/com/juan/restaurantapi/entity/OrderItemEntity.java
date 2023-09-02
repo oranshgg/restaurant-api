@@ -24,4 +24,7 @@ public class OrderItemEntity {
     @ManyToOne
     @JoinColumn(name = "menu_item_id")
     private MenuItemEntity menuItemId;
+
+    @Column(name = "extra_fields")
+    private String extraFields;
 }
