@@ -6,6 +6,7 @@ import com.juan.restaurantapi.dto.OrderDTO;
 import com.juan.restaurantapi.dto.RestaurantDTO;
 import com.juan.restaurantapi.entity.MenuItemEntity;
 import com.juan.restaurantapi.entity.OrderEntity;
+import com.juan.restaurantapi.entity.OrderItemEntity;
 import com.juan.restaurantapi.entity.RestaurantEntity;
 import com.juan.restaurantapi.exception.BadRequestException;
 import com.juan.restaurantapi.mapper.OrderMapper;
@@ -33,8 +34,26 @@ public class OrderServiceImpl implements OrderService {
     private final OrderItemsRepository orderItemsRepository;
 
     @Override
-    public Optional<List<OrderDTO>> getAllOrders() {
-        return orderRepository.getAllOrders();
+    public Optional<OrderDTO> getOrderById(Long orderId) {
+        Optional<OrderEntity> orderEntity = orderRepository.getOrderById(orderId);
+
+        if (orderEntity.isEmpty()) {
+            return Optional.empty();
+        }
+
+        Optional<List<OrderItemEntity>> orderItemEntities = orderItemsRepository.getMenuItemsByOrderId(orderId);
+
+        List<Long> menuItemsIds = new ArrayList<>();
+
+        for (OrderItemEntity orderItemEntity : orderItemEntities.get()) {
+            menuItemsIds.add(orderItemEntity.getMenuItemId().getId());
+        }
+
+        List<MenuItemEntity> menuItemEntities = this.getMenuItemEntities(menuItemsIds);
+
+        return Optional.of(
+            OrderMapper.mapEntityToDTOWithMenuItems(orderEntity.get(), menuItemEntities)
+        );
     }
 
     @Override

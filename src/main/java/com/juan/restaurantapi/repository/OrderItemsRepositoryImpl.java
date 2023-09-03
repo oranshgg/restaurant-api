@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
@@ -21,5 +22,10 @@ public class OrderItemsRepositoryImpl implements OrderItemsRepository{
             orderItemEntity.setMenuItemId(menuItemEntity);
            orderItemsJPARepository.save(orderItemEntity);
         }
+    }
+
+    @Override
+    public Optional<List<OrderItemEntity>> getMenuItemsByOrderId(Long orderId) {
+        return Optional.of(orderItemsJPARepository.findMenuItemsByOrderId(orderId));
     }
 }
