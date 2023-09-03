@@ -1,5 +1,6 @@
 package com.juan.restaurantapi.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
@@ -31,5 +32,6 @@ public class MenuItemDTO {
     private Boolean available;
 
     @JsonProperty("restaurant")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private RestaurantDTO restaurant = new RestaurantDTO();
 }

@@ -11,9 +11,9 @@ import java.util.Optional;
 public interface OrderService {
 
     /**
-     * get all orders
+     * get order by id
      */
-    Optional<List<OrderDTO>> getAllOrders();
+    Optional<OrderDTO> getOrderById(Long orderId);
 
     /**
      * create order
