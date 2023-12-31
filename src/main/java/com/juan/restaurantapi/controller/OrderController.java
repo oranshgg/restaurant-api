@@ -17,6 +17,7 @@ import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin(origins = "${cors.port}")
 public class OrderController {
     private final OrderService orderService;
     private final EventProducer eventProducer;

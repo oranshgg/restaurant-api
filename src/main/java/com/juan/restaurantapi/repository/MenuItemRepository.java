@@ -10,5 +10,7 @@ public interface MenuItemRepository {
 
     Optional<List<MenuItemDTO>> getMenuItemsByRestaurantId(Long restaurantId);
 
+    Optional<List<MenuItemDTO>> getMenuItemsByRestaurantIdNoRestaurantNode(Long restaurantId);
+
     Optional<MenuItemEntity> getMenuItemById(Long menuItemId);
 }

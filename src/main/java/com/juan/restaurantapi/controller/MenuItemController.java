@@ -5,6 +5,7 @@ import com.juan.restaurantapi.service.MenuItemService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +14,7 @@ import java.util.*;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin(origins = "${cors.port}")
 public class MenuItemController {
     private final MenuItemService menuItemService;
     @GetMapping("/menu-items/restaurant/{restaurantId}")
