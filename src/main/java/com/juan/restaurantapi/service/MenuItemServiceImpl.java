@@ -15,6 +15,6 @@ public class MenuItemServiceImpl implements MenuItemService{
     private final MenuItemRepository menuItemRepository;
     @Override
     public Optional<List<MenuItemDTO>> getMenuItemsByRestaurantId(Long restaurantId) {
-        return menuItemRepository.getMenuItemsByRestaurantId(restaurantId);
+        return menuItemRepository.getMenuItemsByRestaurantIdNoRestaurantNode(restaurantId);
     }
 }

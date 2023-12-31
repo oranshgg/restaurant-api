@@ -30,6 +30,21 @@ public class MenuItemRepositoryImpl implements MenuItemRepository {
         return Optional.of(restaurantItemsDTO);
     }
 
+    @Override
+    public Optional<List<MenuItemDTO>> getMenuItemsByRestaurantIdNoRestaurantNode(Long restaurantId) {
+        List<MenuItemEntity> restaurantItems = menuItemJPARepository.findMenuItemEntitiesByRestaurantId(restaurantId);
+
+        List<MenuItemDTO> restaurantItemsDTO = new ArrayList<>();
+
+        if(!restaurantItems.isEmpty()) {
+            for (MenuItemEntity menuItemEntity : restaurantItems) {
+                restaurantItemsDTO.add(MenuItemMapper.mapEntityToDTOWithoutRestaurant(menuItemEntity));
+            }
+        }
+
+        return Optional.of(restaurantItemsDTO);
+    }
+
     public Optional<MenuItemEntity> getMenuItemById(Long menuItemId) {
         return menuItemJPARepository.findById(menuItemId);
     }
