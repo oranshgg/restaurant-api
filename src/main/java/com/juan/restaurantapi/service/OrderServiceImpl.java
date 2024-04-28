@@ -60,6 +60,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Optional<OrderDTO> createOrder(CreateOrderDTO createOrderDTO) {
+
+        if (createOrderDTO.getTableNumber() == null || createOrderDTO.getTableNumber() <= 0) {
+            throw new BadRequestException("El numero de mesa no es válido.");
+        }
+
         Optional<RestaurantDTO> restaurantDTO = restaurantRepository.getRestaurantById(createOrderDTO.getRestaurantId());
         if (restaurantDTO.isEmpty()) {
             throw new BadRequestException(

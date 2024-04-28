@@ -28,4 +28,7 @@ public class OrderEntity {
 
     @Column(name = "extra_fields")
     private String extraFields;
+
+    @Column(name = "table_number")
+    private Long tableNumber;
 }
