@@ -20,7 +20,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +33,7 @@ public class OrderServiceImpl implements OrderService {
     private final RestaurantRepository restaurantRepository;
     private final MenuItemRepository menuItemRepository;
     private final OrderItemsRepository orderItemsRepository;
+    private final SseService sseService;
 
     @Override
     public Optional<OrderDTO> getOrderById(Long orderId) {
@@ -101,6 +101,8 @@ public class OrderServiceImpl implements OrderService {
 
         //guardar la relación order - menu item
         orderItemsRepository.saveMenuItems(createdOrder.get(), menuItemEntities);
+        //mandamos el evento a /orders-stream
+        sseService.sendEvent(OrderMapper.mapEntityToDTO(createdOrder.get()));
 
         return Optional.of(OrderMapper.mapEntityToDTO(createdOrder.get()));
     }

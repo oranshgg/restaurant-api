@@ -2,7 +2,6 @@ package com.juan.restaurantapi.controller;
 
 import com.juan.restaurantapi.dto.CreateOrderDTO;
 import com.juan.restaurantapi.dto.OrderDTO;
-import com.juan.restaurantapi.events.EventProducer;
 import com.juan.restaurantapi.exception.BadRequestException;
 import com.juan.restaurantapi.service.OrderService;
 import lombok.AllArgsConstructor;
@@ -11,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -20,7 +18,6 @@ import java.util.Optional;
 @CrossOrigin(origins = "${cors.port}")
 public class OrderController {
     private final OrderService orderService;
-    private final EventProducer eventProducer;
 
     @GetMapping("/orders/{orderId}")
     public ResponseEntity<OrderDTO> getAllOrders(@PathVariable Long orderId) {
@@ -39,7 +36,6 @@ public class OrderController {
             if (createdOrder.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
-            eventProducer.publishEvent(createdOrder.get());
             return ResponseEntity.status(HttpStatus.CREATED).body(createdOrder.get());
 
         } catch (BadRequestException ex) {
