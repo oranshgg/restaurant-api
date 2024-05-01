@@ -21,6 +21,7 @@ public final class OrderMapper {
                 .date(order.getDate())
                 .restaurant(RestaurantMapper.mapEntityToDTO(order.getRestaurant()))
                 .extraFields(order.getExtraFields())
+                .tableNumber(order.getTableNumber())
                 .build();
     }
 
@@ -37,6 +38,7 @@ public final class OrderMapper {
                 .restaurant(RestaurantMapper.mapEntityToDTO(orderEntity.getRestaurant()))
                 .menuItems(menuItemDTOList)
                 .extraFields(orderEntity.getExtraFields())
+                .tableNumber(orderEntity.getTableNumber())
                 .build();
     }
 
@@ -44,6 +46,7 @@ public final class OrderMapper {
         return OrderEntity.builder()
                 .restaurant(restaurantEntity)
                 .extraFields(createOrderDTO.getExtraFields())
+                .tableNumber(createOrderDTO.getTableNumber())
                 .build();
     }
 }

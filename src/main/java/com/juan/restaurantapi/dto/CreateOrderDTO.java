@@ -21,4 +21,7 @@ public class CreateOrderDTO {
     @JsonProperty("extra_fields")
     private String extraFields;
 
+    @JsonProperty("table_number")
+    private Long tableNumber;
+
 }

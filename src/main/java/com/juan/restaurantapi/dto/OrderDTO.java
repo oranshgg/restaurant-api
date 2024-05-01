@@ -36,4 +36,7 @@ public class OrderDTO {
 
     @JsonProperty("restaurant")
     private RestaurantDTO restaurant = new RestaurantDTO();
+
+    @JsonProperty("table_number")
+    private Long tableNumber;
 }
