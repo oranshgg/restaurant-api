@@ -20,9 +20,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -37,6 +35,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Optional<OrderDTO> getOrderById(Long orderId) {
+        if (orderId < 1) {
+            throw new BadRequestException(
+                    String.format("El order id es inválido")
+            );
+        }
+
         Optional<OrderEntity> orderEntity = orderRepository.getOrderById(orderId);
 
         if (orderEntity.isEmpty()) {
@@ -107,7 +111,7 @@ public class OrderServiceImpl implements OrderService {
         //guardar la relación order - menu item
         orderItemsRepository.saveMenuItems(createdOrder.get(), menuItemEntities);
         //mandamos el evento a /orders-stream
-        sseService.sendEvent(OrderMapper.mapEntityToDTO(createdOrder.get()));
+        sseService.sendEvent(OrderMapper.mapEntityToDTOWithMenuItems(createdOrder.get(), menuItemEntities));
 
         return Optional.of(OrderMapper.mapEntityToDTO(createdOrder.get()));
     }
@@ -126,9 +130,12 @@ public class OrderServiceImpl implements OrderService {
             List<Long> requestMenuItems) {
 
         List<MenuItemEntity> menuItemEntities = new ArrayList<>();
-        for(MenuItemDTO menuItemDTO : menuList.get()) {
-            if (requestMenuItems.contains(menuItemDTO.getId())) {
-                menuItemEntities.add(MenuItemMapper.mapDTOToEntity(menuItemDTO));
+
+        for (Long id : requestMenuItems) {
+            for (MenuItemDTO menuItemDTO : menuList.get()) {
+                if (menuItemDTO.getId().equals(id)) {
+                    menuItemEntities.add(MenuItemMapper.mapDTOToEntity(menuItemDTO));
+                }
             }
         }
         return menuItemEntities;
