@@ -20,12 +20,18 @@ public class OrderController {
     private final OrderService orderService;
 
     @GetMapping("/orders/{orderId}")
-    public ResponseEntity<OrderDTO> getAllOrders(@PathVariable Long orderId) {
-        Optional<OrderDTO> order = orderService.getOrderById(orderId);
-        if (order.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    public ResponseEntity<?> getAllOrders(@PathVariable Long orderId) {
+        try {
+            Optional<OrderDTO> order = orderService.getOrderById(orderId);
+            if (order.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(order.get());
+        } catch (BadRequestException ex) {
+            Map<String, String> response = new HashMap<>();
+            response.put("message", ex.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
-        return ResponseEntity.status(HttpStatus.OK).body(order.get());
     }
 
     @PostMapping("/orders")
