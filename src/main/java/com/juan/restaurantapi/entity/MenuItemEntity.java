@@ -36,4 +36,6 @@ public class MenuItemEntity {
     @JoinColumn(name = "restaurant_id")
     private RestaurantEntity restaurant;
 
+    @Column(name = "subgroup")
+    private String subgroup;
 }
