@@ -16,6 +16,7 @@ public class MenuItemMapper {
                 .description(menuItemEntity.getDescription())
                 .available(menuItemEntity.getAvailable())
                 .restaurant(RestaurantMapper.mapEntityToDTO(menuItemEntity.getRestaurant()))
+                .subgroup(menuItemEntity.getSubgroup())
                 .build();
     }
 
@@ -26,6 +27,7 @@ public class MenuItemMapper {
                 .price(menuItemEntity.getPrice())
                 .description(menuItemEntity.getDescription())
                 .available(menuItemEntity.getAvailable())
+                .subgroup(menuItemEntity.getSubgroup())
                 .build();
     }
 
@@ -37,6 +39,7 @@ public class MenuItemMapper {
                 .description(menuItemDTO.getDescription())
                 .available(menuItemDTO.getAvailable())
                 .restaurant(RestaurantMapper.mapDTOToEntity(menuItemDTO.getRestaurant()))
+                .subgroup(menuItemDTO.getSubgroup())
                 .build();
     }
 }

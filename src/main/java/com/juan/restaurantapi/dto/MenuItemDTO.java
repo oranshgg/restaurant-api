@@ -34,4 +34,7 @@ public class MenuItemDTO {
     @JsonProperty("restaurant")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private RestaurantDTO restaurant = new RestaurantDTO();
+
+    @JsonProperty("subgroup")
+    private String subgroup;
 }
