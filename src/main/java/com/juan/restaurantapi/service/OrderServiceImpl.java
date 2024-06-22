@@ -83,6 +83,10 @@ public class OrderServiceImpl implements OrderService {
             );
         }
 
+        if (createOrderDTO.getMenuItems().size() > 20) {
+            throw new BadRequestException("Máximo de items alcanzado");
+        }
+
         List<Long> allRestaurantMenuItems = this.getIdsFromMenuItemList(menuList);
 
         boolean idsExist = this.validateRequestMenuItemsIds(allRestaurantMenuItems, createOrderDTO.getMenuItems());
