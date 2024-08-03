@@ -62,6 +62,40 @@ public class OrderServiceImpl implements OrderService {
         );
     }
 
+    public Optional<List<OrderDTO>> getLastOrders(Long restaurantId) {
+        if (restaurantId < 1) {
+            throw new BadRequestException(
+                    String.format("El restaurant id es inválido")
+            );
+        }
+
+        Optional<List<OrderEntity>> orderEntities = orderRepository.getLastOrders(restaurantId);
+
+        if (orderEntities.isEmpty()) {
+            return Optional.empty();
+        }
+
+        List<OrderDTO> orderDTOList = new ArrayList<>();
+        List<Long> menuItemsIds = new ArrayList<>();
+        List<MenuItemEntity> menuItemEntities;
+
+        for(OrderEntity orderEntity : orderEntities.get()) {
+            Optional<List<OrderItemEntity>> orderItemEntities = orderItemsRepository.getMenuItemsByOrderId(orderEntity.getId());
+            menuItemsIds.clear();
+            for (OrderItemEntity orderItemEntity : orderItemEntities.get()) {
+                menuItemsIds.add(orderItemEntity.getMenuItemId().getId());
+            }
+            menuItemEntities = this.getMenuItemEntities(menuItemsIds);
+            OrderDTO orderDTO = OrderMapper.mapEntityToDTOWithMenuItemsWithoutRestaurant(orderEntity, menuItemEntities);
+            orderDTOList.add(orderDTO);
+        }
+
+        if(orderDTOList.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(orderDTOList);
+    }
+
     @Override
     public Optional<OrderDTO> createOrder(CreateOrderDTO createOrderDTO) {
 
