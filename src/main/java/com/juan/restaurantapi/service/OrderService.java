@@ -16,6 +16,10 @@ public interface OrderService {
     Optional<OrderDTO> getOrderById(Long orderId);
 
     /**
+     * get last orders from previous 6 hours
+     */
+    Optional<List<OrderDTO>> getLastOrders(Long restaurantId);
+    /**
      * create order
      */
     Optional<OrderDTO> createOrder(CreateOrderDTO createOrderDTO);

@@ -42,6 +42,22 @@ public final class OrderMapper {
                 .build();
     }
 
+    public static OrderDTO mapEntityToDTOWithMenuItemsWithoutRestaurant(OrderEntity orderEntity, List<MenuItemEntity> menuItemEntityList) {
+
+        List<MenuItemDTO> menuItemDTOList = new ArrayList<>();
+        for (MenuItemEntity menuItemEntity : menuItemEntityList) {
+            menuItemDTOList.add(MenuItemMapper.mapEntityToDTOWithoutRestaurant(menuItemEntity));
+        }
+
+        return OrderDTO.builder()
+                .id(orderEntity.getId())
+                .date(orderEntity.getDate())
+                .menuItems(menuItemDTOList)
+                .extraFields(orderEntity.getExtraFields())
+                .tableNumber(orderEntity.getTableNumber())
+                .build();
+    }
+
     public static OrderEntity mapRequestToEntity(RestaurantEntity restaurantEntity, CreateOrderDTO createOrderDTO) {
         return OrderEntity.builder()
                 .restaurant(restaurantEntity)

@@ -15,7 +15,7 @@ public class OrderItemsRepositoryImpl implements OrderItemsRepository{
 
     private final OrderItemsJPARepository orderItemsJPARepository;
     @Override
-    public void saveMenuItems(OrderEntity orderEntity, List<MenuItemEntity> menuItemEntities) {
+    public void saveOrderItems(OrderEntity orderEntity, List<MenuItemEntity> menuItemEntities) {
         for(MenuItemEntity menuItemEntity : menuItemEntities) {
             OrderItemEntity orderItemEntity = new OrderItemEntity();
             orderItemEntity.setOrderId(orderEntity);
@@ -25,7 +25,12 @@ public class OrderItemsRepositoryImpl implements OrderItemsRepository{
     }
 
     @Override
-    public Optional<List<OrderItemEntity>> getMenuItemsByOrderId(Long orderId) {
-        return Optional.of(orderItemsJPARepository.findMenuItemsByOrderId(orderId));
+    public Optional<List<OrderItemEntity>> getOrderItemsByOrderId(Long orderId) {
+        return Optional.of(orderItemsJPARepository.findOrderItemsByOrderId(orderId));
+    }
+
+    @Override
+    public Optional<List<OrderItemEntity>> getOrderItemsByOrderIdList(List<Long> orderIds) {
+        return Optional.of(orderItemsJPARepository.findOrderItemsByOrderIds(orderIds));
     }
 }

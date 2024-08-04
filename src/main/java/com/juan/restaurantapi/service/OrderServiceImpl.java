@@ -47,7 +47,7 @@ public class OrderServiceImpl implements OrderService {
             return Optional.empty();
         }
 
-        Optional<List<OrderItemEntity>> orderItemEntities = orderItemsRepository.getMenuItemsByOrderId(orderId);
+        Optional<List<OrderItemEntity>> orderItemEntities = orderItemsRepository.getOrderItemsByOrderId(orderId);
 
         List<Long> menuItemsIds = new ArrayList<>();
 
@@ -60,6 +60,43 @@ public class OrderServiceImpl implements OrderService {
         return Optional.of(
             OrderMapper.mapEntityToDTOWithMenuItems(orderEntity.get(), menuItemEntities)
         );
+    }
+
+    public Optional<List<OrderDTO>> getLastOrders(Long restaurantId) {
+        if (restaurantId < 1) {
+            throw new BadRequestException(
+                    String.format("El restaurant id es inválido")
+            );
+        }
+
+        Optional<List<OrderEntity>> orderEntities = orderRepository.getLastOrders(restaurantId);
+
+        if (orderEntities.isEmpty()) {
+            return Optional.empty();
+        }
+
+        List<OrderDTO> orderDTOList = new ArrayList<>();
+        List<Long> menuItemsIds = new ArrayList<>();
+        List<MenuItemEntity> menuItemEntities;
+        List<Long> orderIds = this.getOrderIdsFromOrderEntities(orderEntities.get());
+        Optional<List<OrderItemEntity>> orderItemEntities = orderItemsRepository.getOrderItemsByOrderIdList(orderIds);
+
+        for (OrderEntity orderEntity : orderEntities.get()) {
+            menuItemsIds.clear();
+            for (OrderItemEntity orderItemEntity : orderItemEntities.get()) {
+                if (orderItemEntity.getOrderId().getId().equals(orderEntity.getId())) {
+                    menuItemsIds.add(orderItemEntity.getMenuItemId().getId());
+                }
+            }
+            menuItemEntities = this.getMenuItemEntities(menuItemsIds);
+            OrderDTO orderDTO = OrderMapper.mapEntityToDTOWithMenuItemsWithoutRestaurant(orderEntity, menuItemEntities);
+            orderDTOList.add(orderDTO);
+        }
+
+        if (orderDTOList.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(orderDTOList);
     }
 
     @Override
@@ -113,7 +150,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         //guardar la relación order - menu item
-        orderItemsRepository.saveMenuItems(createdOrder.get(), menuItemEntities);
+        orderItemsRepository.saveOrderItems(createdOrder.get(), menuItemEntities);
         //mandamos el evento a /orders-stream
         sseService.sendEvent(OrderMapper.mapEntityToDTOWithMenuItems(createdOrder.get(), menuItemEntities));
 
@@ -156,7 +193,7 @@ public class OrderServiceImpl implements OrderService {
     private boolean validateRequestMenuItemsIds(List<Long> DBMenuItemsIds, List<Long> menuItemsIdsRequest) {
         boolean continueCreation = true;
         for (Long id : menuItemsIdsRequest) {
-            if(!DBMenuItemsIds.contains(id)) {
+            if (!DBMenuItemsIds.contains(id)) {
                 continueCreation = false;
                 break;
             }
@@ -165,11 +202,19 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private boolean validateReqMenuItemsStatus(List<MenuItemEntity> menuItemEntityList) {
-        for(MenuItemEntity menuItemEntity : menuItemEntityList) {
+        for (MenuItemEntity menuItemEntity : menuItemEntityList) {
          if (!menuItemEntity.getAvailable()) {
              return false;
          }
         }
         return true;
+    }
+
+    private List<Long> getOrderIdsFromOrderEntities(List<OrderEntity> orderEntities) {
+        List<Long> orderIds = new ArrayList<>();
+        for (OrderEntity orderEntity : orderEntities) {
+            orderIds.add(orderEntity.getId());
+        }
+        return orderIds;
     }
 }

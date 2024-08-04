@@ -6,6 +6,7 @@ import com.juan.restaurantapi.mapper.OrderMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -17,6 +18,11 @@ public class OrderRepositoryImpl implements OrderRepository {
     @Override
     public Optional<OrderEntity> getOrderById(Long orderId) {
         return orderJPARepository.findById(orderId);
+    }
+
+    @Override
+    public Optional<List<OrderEntity>> getLastOrders(Long restaurantId) {
+        return orderJPARepository.getLastOrders(restaurantId);
     }
 
     @Override

@@ -9,7 +9,9 @@ import java.util.Optional;
 
 public interface OrderItemsRepository {
 
-    void saveMenuItems(OrderEntity orderEntity, List<MenuItemEntity> menuItemEntities);
+    void saveOrderItems(OrderEntity orderEntity, List<MenuItemEntity> menuItemEntities);
 
-    Optional<List<OrderItemEntity>> getMenuItemsByOrderId(Long orderId);
+    Optional<List<OrderItemEntity>> getOrderItemsByOrderId(Long orderId);
+
+    Optional<List<OrderItemEntity>> getOrderItemsByOrderIdList(List<Long> orderIds);
 }
