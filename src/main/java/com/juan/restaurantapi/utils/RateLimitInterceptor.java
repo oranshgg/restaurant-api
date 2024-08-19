@@ -37,7 +37,7 @@ public class RateLimitInterceptor implements HandlerInterceptor {
         long requestCount = requestCounts.merge(clientIp, 1L, Long::sum);
 
         if (requestCount > ALLOWED_REQUESTS) {
-            response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value()); // Mejor usa 429 para solicitudes excesivas
+            response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
             return false;
         }
 
