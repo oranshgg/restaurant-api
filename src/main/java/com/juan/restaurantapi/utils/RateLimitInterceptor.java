@@ -14,26 +14,26 @@ public class RateLimitInterceptor implements HandlerInterceptor {
 
     private final ConcurrentHashMap<String, Long> requestCounts = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Long> requestTimestamps = new ConcurrentHashMap<>();
-    private final long ALLOWED_REQUESTS = 100; // número de solicitudes permitidas
-    private final long TIME_WINDOW = TimeUnit.MINUTES.toMillis(1); // ventana de tiempo en mins
+    private final long ALLOWED_REQUESTS = 100; // allowed reqs
+    private final long TIME_WINDOW = TimeUnit.MINUTES.toMillis(1); // time window on mins
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String clientIp = request.getRemoteAddr();
         long currentTime = System.currentTimeMillis();
 
-        // Manejo del tiempo
+        // time handling
         requestTimestamps.putIfAbsent(clientIp, currentTime);
         long startTime = requestTimestamps.get(clientIp);
 
         if (currentTime - startTime > TIME_WINDOW) {
-            // Reinicia la cuenta y la ventana de tiempo
+            // restart the count and time window
             requestTimestamps.put(clientIp, currentTime);
             requestCounts.put(clientIp, 1L);
             return true;
         }
 
-        // Manejo del conteo de solicitudes
+        // handle count reqs
         long requestCount = requestCounts.merge(clientIp, 1L, Long::sum);
 
         if (requestCount > ALLOWED_REQUESTS) {
