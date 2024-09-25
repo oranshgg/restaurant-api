@@ -1,16 +1,16 @@
 package com.juan.restaurantapi.controller;
 
+import com.juan.restaurantapi.dto.CreateMenuItemDTO;
 import com.juan.restaurantapi.dto.MenuItemDTO;
+import com.juan.restaurantapi.exception.BadRequestException;
 import com.juan.restaurantapi.service.MenuItemService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -27,5 +27,21 @@ public class MenuItemController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
         return ResponseEntity.status(HttpStatus.OK).body(menuItems.get());
+    }
+
+    @PostMapping("/menu-items/create")
+    public ResponseEntity<?> createMenuItem(@RequestBody CreateMenuItemDTO createMenuItemDTO) {
+        Map<String, String> response = new HashMap<>();
+        try {
+            Optional<CreateMenuItemDTO> createdItem = menuItemService.createMenuItem(createMenuItemDTO);
+            if (createdItem.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocurrió un error al crear el producto.");
+            }
+            response.put("message", String.format("El producto %s fue creado con éxito", createdItem.get().getName()));
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (BadRequestException ex) {
+            response.put("message", ex.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
     }
 }

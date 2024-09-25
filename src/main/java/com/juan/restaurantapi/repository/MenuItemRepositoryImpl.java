@@ -1,5 +1,6 @@
 package com.juan.restaurantapi.repository;
 
+import com.juan.restaurantapi.dto.CreateMenuItemDTO;
 import com.juan.restaurantapi.dto.MenuItemDTO;
 import com.juan.restaurantapi.entity.MenuItemEntity;
 import com.juan.restaurantapi.mapper.MenuItemMapper;
@@ -45,7 +46,21 @@ public class MenuItemRepositoryImpl implements MenuItemRepository {
         return Optional.of(restaurantItemsDTO);
     }
 
+    @Override
     public Optional<MenuItemEntity> getMenuItemById(Long menuItemId) {
         return menuItemJPARepository.findById(menuItemId);
+    }
+
+    @Override
+    public Optional<Integer> createMenuItem(CreateMenuItemDTO createMenuItemDTO) {
+        Integer createdMenuItem = menuItemJPARepository.createMenuItem(
+                createMenuItemDTO.getName(),
+                createMenuItemDTO.getPrice(),
+                createMenuItemDTO.getDescription(),
+                createMenuItemDTO.getAvailable(),
+                createMenuItemDTO.getRestaurantId(),
+                createMenuItemDTO.getSubgroup()
+        );
+        return Optional.of(createdMenuItem);
     }
 }
