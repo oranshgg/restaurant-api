@@ -44,4 +44,20 @@ public class MenuItemController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
+
+    @PutMapping("/menu-items/update/{menuItemId}")
+    public ResponseEntity<?> updateMenuItem(@PathVariable String menuItemId, @RequestBody CreateMenuItemDTO updateMenuItemDTO) {
+        Map<String, String> response = new HashMap<>();
+        try {
+            Optional<MenuItemDTO> updatedItem = menuItemService.updateMenuItem(menuItemId, updateMenuItemDTO);
+            if (updatedItem.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocurrió un error al crear el producto.");
+            }
+            response.put("message", String.format("El producto %s fue actualizado con éxito", updatedItem.get().getName()));
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (BadRequestException ex) {
+            response.put("message", ex.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
 }

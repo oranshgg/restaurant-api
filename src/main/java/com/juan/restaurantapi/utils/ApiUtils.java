@@ -3,6 +3,15 @@ package com.juan.restaurantapi.utils;
 import java.math.BigDecimal;
 
 public class ApiUtils {
+
+    public static boolean validateStringPathParameter(String parameter) {
+        try {
+            Long validation = Long.parseLong(parameter);
+            return !parameter.trim().isEmpty() && parameter.length() >= 1;
+        } catch (NumberFormatException ex) {
+            return false;
+        }
+    }
     public static boolean validateStringParameter(String parameter) {
         return parameter != null && !parameter.trim().isEmpty() && parameter.length() >= 5;
     }
