@@ -63,4 +63,9 @@ public class MenuItemRepositoryImpl implements MenuItemRepository {
         );
         return Optional.of(createdMenuItem);
     }
+
+    @Override
+    public Optional<MenuItemEntity> updateMenuItem(MenuItemEntity menuItemEntityUpdated) {
+        return Optional.of(menuItemJPARepository.save(menuItemEntityUpdated));
+    }
 }

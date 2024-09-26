@@ -16,4 +16,6 @@ public interface MenuItemRepository {
     Optional<MenuItemEntity> getMenuItemById(Long menuItemId);
 
     Optional<Integer> createMenuItem(CreateMenuItemDTO createMenuItemDTO);
+
+    Optional<MenuItemEntity> updateMenuItem(MenuItemEntity menuItemEntityUpdated);
 }

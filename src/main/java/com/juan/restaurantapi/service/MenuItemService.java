@@ -13,4 +13,6 @@ public interface MenuItemService {
     Optional<List<MenuItemDTO>> getMenuItemsByRestaurantId(Long restaurantId);
 
     Optional<CreateMenuItemDTO> createMenuItem(CreateMenuItemDTO createMenuItemDTO);
+
+    Optional<MenuItemDTO> updateMenuItem(String menuItemId, CreateMenuItemDTO createMenuItemDTO);
 }
