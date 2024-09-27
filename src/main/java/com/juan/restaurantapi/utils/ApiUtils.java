@@ -3,6 +3,19 @@ package com.juan.restaurantapi.utils;
 import java.math.BigDecimal;
 
 public class ApiUtils {
+    public enum OrderStatus {
+        CREATED,
+        IN_PROGRESS,
+        DELIVERED;
+    }
+    public static boolean validateOrderStatus(String status) {
+        try {
+            OrderStatus.valueOf(status.toUpperCase());
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+    }
 
     public static boolean validateStringPathParameter(String parameter) {
         try {

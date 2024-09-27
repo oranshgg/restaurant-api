@@ -16,6 +16,7 @@ import com.juan.restaurantapi.repository.MenuItemRepository;
 import com.juan.restaurantapi.repository.OrderItemsRepository;
 import com.juan.restaurantapi.repository.OrderRepository;
 import com.juan.restaurantapi.repository.RestaurantRepository;
+import com.juan.restaurantapi.utils.ApiUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -155,6 +156,33 @@ public class OrderServiceImpl implements OrderService {
         sseService.sendEvent(OrderMapper.mapEntityToDTOWithMenuItems(createdOrder.get(), menuItemEntities));
 
         return Optional.of(OrderMapper.mapEntityToDTO(createdOrder.get()));
+    }
+
+    @Override
+    public Optional<OrderDTO> updateOrder(Long orderId, String status) {
+
+        if (!ApiUtils.validateOrderStatus(status)) {
+            throw new BadRequestException("No se puede setear ese estado a la orden");
+        }
+
+        if (!ApiUtils.validateLong(orderId)) {
+            throw new BadRequestException("El id de la orden no es válido");
+        }
+
+        Optional<OrderEntity> orderEntity = orderRepository.getOrderById(orderId);
+
+        if (orderEntity.isEmpty()) {
+            throw new BadRequestException("La orden a actualizar no existe.");
+        }
+
+        orderEntity.get().setStatus(status);
+
+        Optional<OrderEntity> updatedOrderEntity = orderRepository.createOrder(orderEntity.get());
+        if (updatedOrderEntity.isEmpty()) {
+            throw new BadRequestException("Error al actualizar el estado de la orden");
+        }
+
+        return Optional.of(OrderMapper.mapEntityToDTO(updatedOrderEntity.get()));
     }
 
     private List<MenuItemEntity> getMenuItemEntities(List<Long> menuItemsIds) {

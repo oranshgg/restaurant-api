@@ -13,4 +13,5 @@ public interface OrderRepository {
     Optional<List<OrderEntity>> getLastOrders(Long restaurantId);
 
     Optional<OrderEntity> createOrder(OrderEntity orderEntity);
+
 }
