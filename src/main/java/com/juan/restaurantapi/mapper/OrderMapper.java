@@ -67,7 +67,7 @@ public final class OrderMapper {
                 .restaurant(restaurantEntity)
                 .extraFields(createOrderDTO.getExtraFields())
                 .tableNumber(createOrderDTO.getTableNumber())
-                .status(String.valueOf(ApiUtils.OrderStatus.CREATED))
+                .status(String.valueOf(ApiUtils.OrderStatus.CREATED).toLowerCase())
                 .build();
     }
 }
