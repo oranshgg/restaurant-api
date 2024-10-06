@@ -23,4 +23,6 @@ public interface OrderService {
      * create order
      */
     Optional<OrderDTO> createOrder(CreateOrderDTO createOrderDTO);
+
+    Optional<OrderDTO> updateOrder(Long orderId, String status);
 }

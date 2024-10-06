@@ -2,6 +2,7 @@ package com.juan.restaurantapi.controller;
 
 import com.juan.restaurantapi.dto.CreateOrderDTO;
 import com.juan.restaurantapi.dto.OrderDTO;
+import com.juan.restaurantapi.dto.OrderStatusDTO;
 import com.juan.restaurantapi.exception.BadRequestException;
 import com.juan.restaurantapi.service.OrderService;
 import lombok.AllArgsConstructor;
@@ -60,6 +61,23 @@ public class OrderController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
             return ResponseEntity.status(HttpStatus.CREATED).body(createdOrder.get());
+
+        } catch (BadRequestException ex) {
+            Map<String, String> response = new HashMap<>();
+            response.put("message", ex.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
+    @PutMapping("/orders/{orderId}/status")
+    public ResponseEntity<?> updateOrderStatus(@PathVariable Long orderId, @RequestBody OrderStatusDTO status) {
+        try {
+            Optional<OrderDTO> updatedOrder = orderService.updateOrder(orderId, status.getStatus());
+
+            if (updatedOrder.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(updatedOrder.get());
 
         } catch (BadRequestException ex) {
             Map<String, String> response = new HashMap<>();

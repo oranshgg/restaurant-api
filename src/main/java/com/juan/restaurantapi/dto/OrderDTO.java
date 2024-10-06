@@ -39,4 +39,7 @@ public class OrderDTO {
 
     @JsonProperty("table_number")
     private Long tableNumber;
+
+    @JsonProperty("status")
+    private String status;
 }

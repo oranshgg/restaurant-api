@@ -31,4 +31,7 @@ public class OrderEntity {
 
     @Column(name = "table_number")
     private Long tableNumber;
+
+    @Column(name = "status")
+    private String status;
 }

@@ -7,6 +7,7 @@ import com.juan.restaurantapi.dto.RestaurantDTO;
 import com.juan.restaurantapi.entity.MenuItemEntity;
 import com.juan.restaurantapi.entity.OrderEntity;
 import com.juan.restaurantapi.entity.RestaurantEntity;
+import com.juan.restaurantapi.utils.ApiUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ public final class OrderMapper {
                 .restaurant(RestaurantMapper.mapEntityToDTO(order.getRestaurant()))
                 .extraFields(order.getExtraFields())
                 .tableNumber(order.getTableNumber())
+                .status(order.getStatus())
                 .build();
     }
 
@@ -39,6 +41,7 @@ public final class OrderMapper {
                 .menuItems(menuItemDTOList)
                 .extraFields(orderEntity.getExtraFields())
                 .tableNumber(orderEntity.getTableNumber())
+                .status(orderEntity.getStatus())
                 .build();
     }
 
@@ -55,6 +58,7 @@ public final class OrderMapper {
                 .menuItems(menuItemDTOList)
                 .extraFields(orderEntity.getExtraFields())
                 .tableNumber(orderEntity.getTableNumber())
+                .status(orderEntity.getStatus())
                 .build();
     }
 
@@ -63,6 +67,7 @@ public final class OrderMapper {
                 .restaurant(restaurantEntity)
                 .extraFields(createOrderDTO.getExtraFields())
                 .tableNumber(createOrderDTO.getTableNumber())
+                .status(String.valueOf(ApiUtils.OrderStatus.CREATED).toLowerCase())
                 .build();
     }
 }
