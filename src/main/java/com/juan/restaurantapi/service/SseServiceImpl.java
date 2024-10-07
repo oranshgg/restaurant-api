@@ -1,5 +1,6 @@
 package com.juan.restaurantapi.service;
 
+import com.juan.restaurantapi.dto.BillDTO;
 import com.juan.restaurantapi.dto.OrderDTO;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -15,5 +16,9 @@ public class SseServiceImpl implements SseService {
 
     public void sendEvent(OrderDTO orderDTO) {
         publisher.publishEvent(orderDTO);
+    }
+
+    public void sendBillEvent(BillDTO billDTO) {
+        publisher.publishEvent(billDTO);
     }
 }

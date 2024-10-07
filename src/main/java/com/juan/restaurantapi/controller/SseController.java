@@ -1,5 +1,6 @@
 package com.juan.restaurantapi.controller;
 
+import com.juan.restaurantapi.dto.BillDTO;
 import com.juan.restaurantapi.dto.OrderDTO;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.MediaType;
@@ -18,20 +19,30 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @CrossOrigin(origins = "${cors.port}")
 public class SseController {
 
-    private final Set<SseEmitter> clients = new CopyOnWriteArraySet<>();
+    private final Set<SseEmitter> orderClients = new CopyOnWriteArraySet<>();
+    private final Set<SseEmitter> billClients = new CopyOnWriteArraySet<>();
 
     @GetMapping("/orders-stream")
     public SseEmitter ordersStream() {
+        return createSseEmitter(orderClients);
+    }
+
+    @GetMapping("/bills-stream")
+    public SseEmitter billsStream() {
+        return createSseEmitter(billClients);
+    }
+
+    private SseEmitter createSseEmitter(Set<SseEmitter> clientSet) {
         SseEmitter sseEmitter = new SseEmitter(0L);
-        clients.add(sseEmitter);
+        clientSet.add(sseEmitter);
 
         sseEmitter.onTimeout(() -> {
-            clients.remove(sseEmitter);
+            clientSet.remove(sseEmitter);
             sseEmitter.complete();
         });
 
         sseEmitter.onError((ex) -> {
-            clients.remove(sseEmitter);
+            clientSet.remove(sseEmitter);
             sseEmitter.complete();
         });
 
@@ -41,11 +52,21 @@ public class SseController {
     @Async
     @EventListener
     public void orderMessageHandler(OrderDTO orderDTO) {
+        sendToClients(orderClients, orderDTO);
+    }
+
+    @Async
+    @EventListener
+    public void billMessageHandler(BillDTO billDTO) {
+        sendToClients(billClients, billDTO);
+    }
+
+    private <T> void sendToClients(Set<SseEmitter> clients, T event) {
         List<SseEmitter> errorEmitters = new ArrayList<>();
 
         clients.forEach(emitter -> {
             try {
-                emitter.send(orderDTO, MediaType.APPLICATION_JSON);
+                emitter.send(event, MediaType.APPLICATION_JSON);
             } catch (Exception e) {
                 errorEmitters.add(emitter);
             }
