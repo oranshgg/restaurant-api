@@ -14,4 +14,7 @@ public interface OrderJPARepository extends JpaRepository<OrderEntity, Long> {
 
     @Query(value = "SELECT * FROM orders WHERE restaurant_id = :restaurantId and orders.date > DATE_SUB(NOW(), INTERVAL 6 HOUR)", nativeQuery = true)
     Optional<List<OrderEntity>> getLastOrders(@Param("restaurantId") Long restaurantId);
+
+    @Query(value = "SELECT * FROM orders WHERE restaurant_id = :restaurantId and table_number = :tableNumber and orders.date > DATE_SUB(NOW(), INTERVAL 2 HOUR)", nativeQuery = true)
+    Optional<List<OrderEntity>> getSpecificTableLastOrders(@Param("restaurantId") Long restaurantId, @Param("tableNumber") Long tableNumber);
 }

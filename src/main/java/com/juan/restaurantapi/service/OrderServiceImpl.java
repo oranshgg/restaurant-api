@@ -33,6 +33,12 @@ public class OrderServiceImpl implements OrderService {
     private final MenuItemRepository menuItemRepository;
     private final OrderItemsRepository orderItemsRepository;
     private final SseService sseService;
+    private final Integer MAX_TABLE_NUMBER = 25;
+    private final Integer MAX_TOTAL_ORDER_CREATED_INTERVAL = 5;
+    private final Integer MAX_ORDER_CREATED_INTERVAL = 2;
+    private final Integer MAX_ORDER_IN_PROGRESS_INTERVAL = 2;
+    private final Integer MAX_ORDER_DELIVERED_INTERVAL = 2;
+    private final Integer MAX_ORDER_ITEMS = 20;
 
     @Override
     public Optional<OrderDTO> getOrderById(Long orderId) {
@@ -103,7 +109,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Optional<OrderDTO> createOrder(CreateOrderDTO createOrderDTO) {
 
-        if (createOrderDTO.getTableNumber() == null || createOrderDTO.getTableNumber() <= 0) {
+        if (createOrderDTO.getTableNumber() == null || createOrderDTO.getTableNumber() <= 0 || createOrderDTO.getTableNumber() > MAX_TABLE_NUMBER) {
             throw new BadRequestException("El numero de mesa no es válido.");
         }
 
@@ -114,6 +120,10 @@ public class OrderServiceImpl implements OrderService {
             );
         }
 
+        if (createOrderDTO.getMenuItems().size() > MAX_ORDER_ITEMS) {
+            throw new BadRequestException("Máximo de items alcanzado");
+        }
+
         Optional<List<MenuItemDTO>> menuList = menuItemRepository.getMenuItemsByRestaurantId(createOrderDTO.getRestaurantId());
         if (menuList.orElse(new ArrayList<>()).isEmpty()) {
             throw new BadRequestException(
@@ -121,8 +131,14 @@ public class OrderServiceImpl implements OrderService {
             );
         }
 
-        if (createOrderDTO.getMenuItems().size() > 20) {
-            throw new BadRequestException("Máximo de items alcanzado");
+        Optional<List<OrderEntity>> lastOrdersSpecificTable = orderRepository.getSpecificTableLastOrders(createOrderDTO.getRestaurantId(), createOrderDTO.getTableNumber());
+
+        boolean shouldAllowCreate = this.validateSpecificTableOrders(lastOrdersSpecificTable.get());
+
+        if (!shouldAllowCreate) {
+            throw new BadRequestException(
+                    String.format("La mesa %d del restaurant %d no cumple con las condiciones", createOrderDTO.getTableNumber(), createOrderDTO.getRestaurantId())
+            );
         }
 
         List<Long> allRestaurantMenuItems = this.getIdsFromMenuItemList(menuList);
@@ -183,6 +199,46 @@ public class OrderServiceImpl implements OrderService {
         }
 
         return Optional.of(OrderMapper.mapEntityToDTO(updatedOrderEntity.get()));
+    }
+
+    private boolean validateSpecificTableOrders(List<OrderEntity> orders) {
+        int totalOrders = 0;
+        int createdOrders = 0;
+        int inProgressOrders = 0;
+        int deliveredOrders = 0;
+
+        for (OrderEntity order : orders) {
+            totalOrders++;
+            if (order.getStatus().equalsIgnoreCase("created")) {
+                createdOrders++;
+            }
+
+            if (order.getStatus().equalsIgnoreCase("in_progress")) {
+                inProgressOrders++;
+            }
+
+            if (order.getStatus().equalsIgnoreCase("delivered")) {
+                deliveredOrders++;
+            }
+        }
+
+        if (totalOrders == MAX_TOTAL_ORDER_CREATED_INTERVAL) {
+            return false;
+        }
+
+        if (createdOrders >= MAX_ORDER_CREATED_INTERVAL) {
+            return false;
+        }
+
+        if (inProgressOrders >= MAX_ORDER_IN_PROGRESS_INTERVAL) {
+            return true;
+        }
+
+        if (deliveredOrders >= MAX_ORDER_DELIVERED_INTERVAL) {
+            return true;
+        }
+
+        return true;
     }
 
     private List<MenuItemEntity> getMenuItemEntities(List<Long> menuItemsIds) {
