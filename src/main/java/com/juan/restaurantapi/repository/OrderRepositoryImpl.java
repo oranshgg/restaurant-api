@@ -29,4 +29,9 @@ public class OrderRepositoryImpl implements OrderRepository {
     public Optional<OrderEntity> createOrder(OrderEntity orderEntity) {
         return Optional.of(orderJPARepository.save(orderEntity));
     }
+
+    @Override
+    public Optional<List<OrderEntity>> getSpecificTableLastOrders(Long restaurantId, Long tableNumber) {
+        return orderJPARepository.getSpecificTableLastOrders(restaurantId, tableNumber);
+    }
 }
