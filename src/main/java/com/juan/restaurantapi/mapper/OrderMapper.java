@@ -3,7 +3,7 @@ package com.juan.restaurantapi.mapper;
 import com.juan.restaurantapi.dto.CreateOrderDTO;
 import com.juan.restaurantapi.dto.MenuItemDTO;
 import com.juan.restaurantapi.dto.OrderDTO;
-import com.juan.restaurantapi.dto.RestaurantDTO;
+import java.time.LocalDateTime;
 import com.juan.restaurantapi.entity.MenuItemEntity;
 import com.juan.restaurantapi.entity.OrderEntity;
 import com.juan.restaurantapi.entity.RestaurantEntity;
@@ -33,7 +33,7 @@ public final class OrderMapper {
         for (MenuItemEntity menuItemEntity : menuItemEntityList) {
             menuItemDTOList.add(MenuItemMapper.mapEntityToDTOWithoutRestaurant(menuItemEntity));
         }
-
+        System.out.println("JUAN LOG A VER LA DATE " + orderEntity.getDate());
         return OrderDTO.builder()
                 .id(orderEntity.getId())
                 .date(orderEntity.getDate())
@@ -67,6 +67,7 @@ public final class OrderMapper {
                 .restaurant(restaurantEntity)
                 .extraFields(createOrderDTO.getExtraFields())
                 .tableNumber(createOrderDTO.getTableNumber())
+                .date(LocalDateTime.now())
                 .status(String.valueOf(ApiUtils.OrderStatus.CREATED).toLowerCase())
                 .build();
     }
